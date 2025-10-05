@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}考勤记录{% endblock %}
+
+{% block content %}
+    <h1 style="text-align: center;">考勤记录</h1>
+    <table style="width: 60%; border-collapse: collapse; margin: 20px auto;">
+        <thead>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ccc;">签到时间</th>
+                <th style="padding: 10px; border: 1px solid #ccc;">课程</th>
+                <th style="padding: 10px; border: 1px solid #ccc;">状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">{{ record.attendance_time|date:"Y-m-d H:i:s" }}</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">{{ record.course_session.course.name }} - {{record.course_session.start_time |date:"Y-m-d H:i:s"}}</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">{{ record.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{% url 'student_dashboard' %}">
+            <button>Dashboard</button>
+        </a>
+    </div>
+{% endblock %}

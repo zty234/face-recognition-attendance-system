@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.username }}!</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Face Upload Status</h5>
+        <a href="{% url 'upload_face' %}" class="btn btn-outline-primary">Upload New Face</a>
+        <a href="{% url 'student_record' %}" class="btn btn-outline-primary">Student Record</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.username }}!</h2>
+
+<div class="card">
+    <div class="card-body">
+        <a href="{% url 'teacher_view_attendance' %}" class="btn btn-outline-primary">Student Record</a>
+    </div>
+</div>
+{% endblock %}
