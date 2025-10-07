@@ -14,7 +14,8 @@ class User(AbstractUser):
         (TEACHER, 'teacher')
     ]
 
-    photo_path = models.CharField(max_length=200)
+    photo = models.ImageField(upload_to='face_images/', null=True, blank=True)
+    #photo_path = models.CharField(max_length=200)
     register_at = models.DateTimeField(auto_now_add=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=STUDENT)
 

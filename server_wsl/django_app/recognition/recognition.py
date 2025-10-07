@@ -20,16 +20,50 @@ known_face_names = []
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 print("BASE_DIR", BASE_DIR)
 # construct abspath of known_faces
-known_dir = os.path.join(BASE_DIR, 'known_faces')
-print("knwon_dir", known_dir)
+#known_dir = os.path.join(BASE_DIR, 'known_faces')
+#print("knwon_dir", known_dir)
 
 def load_known_faces():
     global known_face_encodings, known_face_names
 
-    # 清空来完成refresh
-    # known_face_names.clear()
-    # known_face_encodings.clear()
+
     with face_data_lock:
+        # 清空来完成refresh
+        known_face_names.clear()
+        known_face_encodings.clear()
+
+        # 从数据库提取人脸信息
+        # .exclude(...)表示只选photo字段不为空的
+        users_with_photos = User.objects.exclude(photo__exact='').filter(photo__isnull = False)
+
+        for user in users_with_photos:
+            name = user.username
+            image_path = user.photo.path
+            
+            if not os.path.exists(image_path):
+                print(f"[Warning] Photo for user '{name}' not found at path: {image_path}")
+                continue
+            
+            try:
+                image = face_recognition.load_image_file(image_path)
+
+                #提取图片人脸编码
+                face_locations = face_recognition.face_locations(image)
+                if len(face_locations) == 0:
+                    print(f"[Warning]No face founded in photo for user '{name}'")
+                    continue
+
+                face_encodings = face_recognition.face_encodings(image, face_locations)
+
+                known_face_encodings.extend(face_encodings)
+                known_face_names.append(name)
+            
+            except Exception as e:
+                print(f"[Error]Failed to process a photo for user '{name}', Reason: {e}")
+
+        print(f"Successfully load {len(known_face_names)} faces!")
+
+'''
         for filename in os.listdir(known_dir):
             # 提取图片人脸对应的名称
             if filename.lower().endswith((".jpg", ".jpeg", ".png")):
@@ -55,7 +89,7 @@ def load_known_faces():
                 known_face_encodings.extend(face_encodings)
     
     print(f"load {len(known_face_names)} faces")
-
+'''
 # 注册时添加单个face
 def load_new_face(name, filepath):
     with face_data_lock:

@@ -6,13 +6,14 @@ from django.conf import settings
 from django.http import HttpResponse, HttpRequest
 from .models import User, AttendanceRecord, Course, CourseSession
 from django.contrib.auth.decorators import login_required
-from .forms import StudentRegistrationForm, TeacherRegistrationForm
+from .forms import StudentRegistrationForm, TeacherRegistrationForm, UserPhotoForm
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 import os
 
 # Create your views here.
+'''
 @login_required
 def upload_face(request:HttpRequest):
     if request.method == 'POST':
@@ -71,12 +72,45 @@ def upload_face(request:HttpRequest):
     
     # if request.method == 'GET':
     return render(request, 'upload_face.html')
+'''
+@login_required
+def upload_face(request: HttpRequest):
+    # We are updating the currently logged-in user, so we pass `instance=request.user`
+    if request.method == 'POST':
+        # Bind the uploaded data to the form
+        form = UserPhotoForm(request.POST, request.FILES, instance=request.user)
+        
+        # form.is_valid() handles all the validation automatically
+        if form.is_valid():
+            # form.save() automatically saves the photo to the `media/face_images`
+            # directory and updates the `photo` field on the user model.
+            user = form.save()
+
+            # Get the path of the newly saved photo
+            file_path = user.photo.path
+            username = user.username
+
+            # Now, load this new face into your recognition system
+            success = recognition.load_new_face(username, file_path)
+
+            if success:
+                messages.success(request, "Successfully uploaded and loaded face!")
+            else:
+                messages.error(request, "Face was uploaded but could not be recognized. Please use a clear, frontal photo.")
+            
+            return redirect('student_dashboard')
+    
+    # For a GET request, just display an empty form
+    else:
+        form = UserPhotoForm(instance=request.user)
+
+    return render(request, 'upload_face.html', {'form': form})
 
 @login_required
 def record(request:HttpRequest):
     user = request.user
 
-    if not user.photo_path:
+    if not user.photo.path:
         messages.warning(request, "未上传图像")
         return redirect('student_dashboard')
     

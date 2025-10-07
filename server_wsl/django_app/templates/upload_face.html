@@ -3,15 +3,29 @@
 {% block title %}Upload Face{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Upload Your Face</h2>
-
-<form method="POST" enctype="multipart/form-data" class="border p-4 bg-white rounded shadow-sm">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="face" class="form-label">Upload Face Image</label>
-        <input type="file" class="form-control" name="photo" accept="image/*" required>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Upload Your Face</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">Please upload a clear, forward-facing photo of yourself.</p>
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {{ form.as_p }}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                            <a href="{% url 'student_dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
-</form>
-<a href="{% url 'student_dashboard' %}" class="btn btn-outline-primary">Dashboard</a>
+</div>
 {% endblock %}
