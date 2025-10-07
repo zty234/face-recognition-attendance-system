@@ -44,3 +44,16 @@ class TeacherRegistrationForm(StudentRegistrationForm):
             user.save()
 
         return user
+    
+
+class UserPhotoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['photo']
+        labels = {
+            'photo': 'Upload your photo'
+        }
+
+        widgets = {
+            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }

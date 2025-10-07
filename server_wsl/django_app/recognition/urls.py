@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
+from django.conf import settings
 urlpatterns = [
     path("upload/", views.upload_face, name='upload_face'),
     path("record/", views.record, name="student_record"),
@@ -10,3 +12,6 @@ urlpatterns = [
     path("dashboard/teacher/", views.teacher_dashboard, name="teacher_dashboard"),
     path("teacher_view_attendance/", views.teacher_view_attendance, name="teacher_view_attendance"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

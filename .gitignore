@@ -11,7 +11,7 @@ venv/
 *.log
 local_settings.py
 db.sqlite3
-/media/
+media/
 
 # User-uploaded content (IMPORTANT for privacy)
 known_faces/

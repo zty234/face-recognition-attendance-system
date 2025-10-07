@@ -13,17 +13,17 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('username', 'role', 'photo_path', 'register_at', 'is_staff', 'is_superuser')
+    list_display = ('username', 'role', 'photo', 'register_at', 'is_staff', 'is_superuser')
     list_filter = ('role', 'register_at', 'is_staff', 'is_superuser')
     search_fields = ('username',)
     ordering = ('-register_at',)
 
     fieldsets = BaseUserAdmin.fieldsets + (
-        (None, {'fields': ('role', 'photo_path',)}),
+        (None, {'fields': ('role', 'photo',)}),
     )
 
     add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        (None, {'fields': ('role', 'photo_path',)}),
+        (None, {'fields': ('role', 'photo',)}),
     )
 
 @admin.register(Course)
